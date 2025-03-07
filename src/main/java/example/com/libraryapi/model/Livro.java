@@ -1,14 +1,21 @@
 package example.com.libraryapi.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "livro")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Livro {
 
     @Id
@@ -25,13 +32,13 @@ public class Livro {
     private LocalDate dataPublicacao;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private GeneroLivro genero;
 
     @Column(nullable = false, precision = 18, scale = 2)
-    private Double preco;
+    private BigDecimal preco;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "id_autor")
     private Autor autor;
 }
