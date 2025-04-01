@@ -6,6 +6,8 @@ import example.com.libraryapi.repository.AutorRepository;
 import example.com.libraryapi.repository.LivroRepository;
 import example.com.libraryapi.validator.AutorValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +48,20 @@ public class AutorService {
             return autorRepository.findByNacionalidade(nacionalidade);
         }
         return autorRepository.findAll();
+    }
+
+    public List<Autor> pesquisaByExample(String nome, String nacionalidade){
+        var autor = new Autor();
+        autor.setNome(nome);
+        autor.setNacionalidade(nacionalidade);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Autor> autorExample = Example.of(autor, matcher);
+
+        return autorRepository.findAll(autorExample);
     }
 
     public void atualizar(Autor autor){

@@ -6,6 +6,7 @@ import example.com.libraryapi.exceptions.OperacaoInvalidaException;
 import example.com.libraryapi.exceptions.RegistroDuplicadoException;
 import example.com.libraryapi.model.Autor;
 import example.com.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class AutorController {
     private final AutorService autorService;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor){
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor){
         try {
             Autor entity = autorService.salvar(autor.mapearParaAutor());
 
@@ -79,7 +80,7 @@ public class AutorController {
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
                                                     @RequestParam(value = "nacionalidade", required = false) String nacionalidade){
 
-        List<Autor> resultado = autorService.pesquisa(nome, nacionalidade);
+        List<Autor> resultado = autorService.pesquisaByExample(nome, nacionalidade);
 
         var resposta = resultado.stream()
                 .map(AutorDTO::toResponse)
