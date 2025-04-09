@@ -13,15 +13,6 @@ public record AutorDTO(UUID id,
                        @NotNull(message = "Campo obrigatório") LocalDate dataNascimento,
                        @NotBlank(message = "Campo obrigatório") String nacionalidade) {
 
-    public Autor mapearParaAutor(){
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setNacionalidade(this.nacionalidade);
-        autor.setDataNascimento(this.dataNascimento);
-
-        return autor;
-    }
-
     public static AutorDTO toResponse(Autor entity){
         return new AutorDTO(
                 entity.getId(),
