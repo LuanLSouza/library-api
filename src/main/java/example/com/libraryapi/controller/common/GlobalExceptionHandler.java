@@ -2,6 +2,7 @@ package example.com.libraryapi.controller.common;
 
 import example.com.libraryapi.controller.dto.ErroCampo;
 import example.com.libraryapi.controller.dto.ErroResposta;
+import example.com.libraryapi.exceptions.CampoInvalidoException;
 import example.com.libraryapi.exceptions.OperacaoInvalidaException;
 import example.com.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroResposta handleErrosNaoTratados(RuntimeException e){
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ocorreu um erro inesperado.", List.of());
+    }
+
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleCampoInvalidoException(CampoInvalidoException e){
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação",
+                List.of(new ErroCampo(e.getCampo(), e.getMessage())));
     }
 }

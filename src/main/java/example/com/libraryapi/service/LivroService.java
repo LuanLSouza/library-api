@@ -4,7 +4,11 @@ import example.com.libraryapi.model.GeneroLivro;
 import example.com.libraryapi.model.Livro;
 import example.com.libraryapi.repository.LivroRepository;
 import example.com.libraryapi.repository.specs.LivroSpecs;
+import example.com.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +24,10 @@ import static example.com.libraryapi.repository.specs.LivroSpecs.*;
 public class LivroService {
 
     private final LivroRepository repository;
+    private final LivroValidator validator;
 
     public Livro salvar(Livro livro) {
+        validator.validar(livro);
         return repository.save(livro);
     }
 
@@ -33,11 +39,13 @@ public class LivroService {
         repository.delete(entity);
     }
 
-    public List<Livro> pesquisa(String isbn,
+    public Page<Livro> pesquisa(String isbn,
                                 String titulo,
                                 String nomeAutor,
                                 GeneroLivro genero,
-                                Integer anoPublicacao){
+                                Integer anoPublicacao,
+                                Integer pagina,
+                                Integer tamanho){
 //        Specification<Livro> specs = Specification
 //                .where(LivroSpecs.isbnEqual(isbn))
 //                .and(LivroSpecs.tituloLike(titulo))
@@ -65,7 +73,9 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
-        return repository.findAll(specs);
+        Pageable pageRequest = PageRequest.of(pagina, tamanho);
+
+        return repository.findAll(specs, pageRequest);
 
     }
 
@@ -73,6 +83,7 @@ public class LivroService {
         if (livro.getId() == null){
             throw new IllegalArgumentException("Livro não existe!");
         }
+        validator.validar(livro);
         repository.save(livro);
     }
 }
