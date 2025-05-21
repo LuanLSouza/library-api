@@ -3,7 +3,6 @@ package example.com.libraryapi.service;
 import example.com.libraryapi.model.GeneroLivro;
 import example.com.libraryapi.model.Livro;
 import example.com.libraryapi.repository.LivroRepository;
-import example.com.libraryapi.repository.specs.LivroSpecs;
 import example.com.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
