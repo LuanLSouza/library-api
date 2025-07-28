@@ -14,12 +14,11 @@ import java.util.UUID;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-
     @Column
     private UUID id;
 
     @Column
-    private String nome;
+    private String login;
 
     @Column
     private String senha;

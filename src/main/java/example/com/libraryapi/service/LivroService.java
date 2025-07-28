@@ -2,7 +2,9 @@ package example.com.libraryapi.service;
 
 import example.com.libraryapi.model.GeneroLivro;
 import example.com.libraryapi.model.Livro;
+import example.com.libraryapi.model.Usuario;
 import example.com.libraryapi.repository.LivroRepository;
+import example.com.libraryapi.security.SecurityService;
 import example.com.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 
